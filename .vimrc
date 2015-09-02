@@ -1,106 +1,250 @@
-" Use the Solarized Dark theme
-set background=dark
-colorscheme solarized
-let g:solarized_termtrans=1
 
-" Make Vim more useful
+"-------------------------
+"" Базовые настройки
+"-------------------------
+"
+"" Включаем несовместимость настроек с Vi (ибо Vi нам и не понадобится).
 set nocompatible
-" Use the OS clipboard by default (on versions compiled with `+clipboard`)
+
 set clipboard=unnamed
-" Enhance command-line completion
-set wildmenu
-" Allow cursor keys in insert mode
-set esckeys
-" Allow backspace in insert mode
-set backspace=indent,eol,start
-" Optimize for fast terminal connections
-set ttyfast
-" Add the g flag to search/replace by default
-set gdefault
-" Use UTF-8 without BOM
-set encoding=utf-8 nobomb
-" Change mapleader
-let mapleader=","
-" Don’t add empty newlines at the end of files
-set binary
-set noeol
-" Centralize backups, swapfiles and undo history
-set backupdir=~/.vim/backups
-set directory=~/.vim/swaps
-if exists("&undodir")
-	set undodir=~/.vim/undo
-endif
 
-" Don’t create backups when editing files in certain directories
-set backupskip=/tmp/*,/private/tmp/*
+color zenburn
+colorscheme zenburn
 
-" Respect modeline in files
-set modeline
-set modelines=4
-" Enable per-directory .vimrc files and disable unsafe commands in them
-set exrc
-set secure
-" Enable line numbers
-set number
-" Enable syntax highlighting
-syntax on
-" Highlight current line
-set cursorline
-" Make tabs as wide as two spaces
-set tabstop=2
-" Show “invisible” characters
-set lcs=tab:▸\ ,trail:·,eol:¬,nbsp:_
-set list
-" Highlight searches
-set hlsearch
-" Ignore case of searches
-set ignorecase
-" Highlight dynamically as pattern is typed
+" for cplugin
+filetype plugin on
+set nocp
+
+map th :tabnext<CR>
+map tl :tabprev<CR>
+map tn :tabnew<CR>
+map td :tabclose<CR>
+" Показывать положение курсора всё время.
+ set ruler		
+"
+" " Показывать незавершённые команды в статусбаре
+ set showcmd		
+"
+" " Включаем нумерацию строк
+set nu
+"
+" " Фолдинг по отсупам
+" set foldmethod=indent
+"
+" " Поиск по набору текста (очень полезная функция)
 set incsearch
-" Always show status line
-set laststatus=2
-" Enable mouse in all modes
+"
+" " Отключаем подстветку найденных вариантов, и так всё видно.
+set hlsearch
+"
+" " Теперь нет необходимости передвигать курсор к краю экрана, чтобы подняться
+" в режиме редактирования
+set scrolljump=5
+
+" Теперь нет необходимости передвигать курсор к краю экрана, чтобы
+" опуститься в режиме редактирования
+set scrolloff=5
+
+" Выключаем надоедливый "звонок"
+set novisualbell
+set t_vb= 
+
+" Включаем 256 цветов
+set t_Co=256
+
+" Поддержка мыши
 set mouse=a
-" Disable error bells
-set noerrorbells
-" Don’t reset cursor to start of line when moving around.
-set nostartofline
-" Show the cursor position
-set ruler
-" Don’t show the intro message when starting Vim
-set shortmess=atI
-" Show the current mode
-set showmode
-" Show the filename in the window titlebar
-set title
-" Show the (partial) command as it’s being typed
-set showcmd
-" Use relative line numbers
-if exists("&relativenumber")
-	set relativenumber
-	au BufReadPost * set relativenumber
-endif
-" Start scrolling three lines before the horizontal window border
-set scrolloff=3
+set mousemodel=popup
 
-" Strip trailing whitespace (,ss)
-function! StripWhitespace()
-	let save_cursor = getpos(".")
-	let old_query = getreg('/')
-	:%s/\s\+$//e
-	call setpos('.', save_cursor)
-	call setreg('/', old_query)
-endfunction
-noremap <leader>ss :call StripWhitespace()<CR>
-" Save a file as root (,W)
-noremap <leader>W :w !sudo tee % > /dev/null<CR>
+" Кодировка текста по умолчанию
+set termencoding=utf-8
 
-" Automatic commands
-if has("autocmd")
-	" Enable file type detection
-	filetype on
-	" Treat .json files as .js
-	autocmd BufNewFile,BufRead *.json setfiletype json syntax=javascript
-	" Treat .md files as Markdown
-	autocmd BufNewFile,BufRead *.md setlocal filetype=markdown
-endif
+" Не выгружать буфер, когда переключаемся на другой
+" Это позволяет редактировать несколько файлов в один и тот же момент без
+" необходимости сохранения каждый раз
+" когда переключаешься между ними
+set hidden
+
+" Скрыть панель в gui версии ибо она не нужна
+set guioptions-=T
+
+" Сделать строку команд высотой в одну строку
+"set ch=1
+
+" Скрывать указатель мыши, когда печатаем
+set mousehide
+
+" Включить автоотступы
+set autoindent
+
+" Влючить подстветку синтаксиса
+syntax on
+
+" allow to use backspace instead of "x"
+set backspace=indent,eol,start whichwrap+=<,>,[,]
+
+" Преобразование Таба в пробелы
+set expandtab
+
+" Размер табулации по умолчанию
+set shiftwidth=4
+set softtabstop=4
+set tabstop=4
+
+" Формат строки состояния
+"set statusline=%<%f%h%m%r\ %b\ %{&encoding}\ 0x\ \ %l,%c%V\ %P 
+"set laststatus=2
+
+" Включаем "умные" отспупы ( например, автоотступ после {)
+set smartindent
+
+" Fix <Enter> for comment
+set fo+=cr
+
+" Опции сесссий
+set sessionoptions=curdir,buffers,tabpages
+
+"-------------------------
+" Горячие клавиши
+"-------------------------
+
+" Пробел в нормальном режиме перелистывает страницы
+nmap <Space> <PageDown>
+
+" CTRL-F для omni completion
+imap <C-F> <C-X><C-O>
+
+" C-c and C-v - Copy/Paste в "глобальный клипборд"
+vmap <C-C> "+yi
+"imap <C-V> <esc>"+gPi
+set pastetoggle=<F12>
+inoremap <C-v> <F12><C-r>+<F12><Esc>
+
+" Заставляем shift-insert работать как в Xterm
+map <S-Insert> <MiddleMouse>
+
+" Поиск и замена слова под курсором
+nmap ; :%s/\<<c-r>=expand("<cword>")<cr>\>/
+
+" F5 - просмотр списка буферов
+nmap <F5> <Esc>:BufExplorer<cr>
+vmap <F5> <esc>:BufExplorer<cr>
+imap <F5> <esc><esc>:BufExplorer<cr>
+
+" F6 - предыдущий буфер
+map <F6> :bp<cr>
+map <S-C-tab> :bp<cr>
+vmap <F6> <esc>:bp<cr>i
+imap <F6> <esc>:bp<cr>i
+
+" F7 - следующий буфер
+map <F7> :bn<cr>
+map <C-tab> :bp<cr>
+vmap <F7> <esc>:bn<cr>i
+imap <F7> <esc>:bn<cr>i
+
+" F11 - показать окно NerdTree
+map <F11> :NERDTree<cr>
+vmap <F11> <esc>:NERDTree<cr>
+imap <F11> <esc>:NERDTree<cr>
+
+" < & > - делаем отступы для блоков
+vmap < <gv
+vmap > >gv
+
+" Выключаем ненавистный режим замены
+imap >Ins> <Esc>i
+
+
+" Меню выбора кодировки текста (koi8-r, cp1251, cp866, utf8)
+set wildmenu
+set wcm=<Tab>
+menu Encoding.koi8-r :e ++enc=koi8-r ++ff=unix<CR>
+menu Encoding.windows-1251 :e ++enc=cp1251 ++ff=dos<CR>
+menu Encoding.cp866 :e ++enc=cp866 ++ff=dos<CR>
+menu Encoding.utf-8 :e ++enc=utf8 <CR>
+map <F3> :emenu Encoding.<TAB>
+
+" Редко когда надо [ без пары =)
+"imap [ []<LEFT>
+" Аналогично и для {
+imap {<CR> {<CR>}<Esc>O
+" Аналогично для (
+"imap ( ()<LEFT>
+
+"
+"" Включаем filetype плугин. Настройки, специфичные для определынных файлов
+"мы разнесём по разным местам
+filetype plugin on
+au BufRead,BufNewFile *.phps set filetype=php
+au BufRead,BufNewFile *.thtml set filetype=php
+
+" Настройки для SessionMgr
+let g:SessionMgr_AutoManage = 0
+let g:SessionMgr_DefaultName = "mysession"
+
+" Настройки для Tlist (показвать только текущий файл в окне навигации по
+" коду)
+let g:Tlist_Show_One_File = 1
+
+set completeopt-=preview
+set completeopt+=longest
+set mps-=[:]
+
+set statusline=%<%f%h%m%r%=format=%{&fileformat}\ file=%{&fileencoding}\ enc=%{&encoding}\ %b\ 0x%B\ %l,%c%V\ %P
+set laststatus=2
+
+" ------------
+" NERDTree
+" ------------
+let NERDTreeIgnore=['.vim$', '\~$', '.swp$', '.ui$', '.save$', '.qm', '.ts', '.png', '.exe', '.ico', '.bmp', '.pyc']
+let NERDTreeChDirMode=2
+let NERDTreeQuitOnOpen=1
+
+au VimLeave * exe ' if strlen(v:this_session) | exe "wviminfo! " . v:this_session . ".viminfo" | else | exe "wviminfo! " . "~/.vim/session/" . g:myfilename . ".session.viminfo" | endif '
+au VimLeave * exe 'if strlen(v:this_session) | exe "mksession! " . v:this_session | else | exe "mksession! " . "~/.vim/session/" . g:myfilename . ".session" | endif '
+
+set viminfo='10,\"100,:20,%,n~/.viminfo
+  
+"set langmap=ёйцукенгшщзхъфывапролджэячсмитьбюЁЙЦУКЕHГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮ;`qwertyuiop[]asdfghjkl\\;'zxcvbnm\\,.~QWERTYUIOP{}ASDFGHJKL:\\"ZXCVBNM<>
+
+au FileType qf call AdjustWindowHeight(3, 10)
+function! AdjustWindowHeight(minheight, maxheight)
+  exe max([min([line("$"), a:maxheight]), a:minheight]) . "wincmd _"
+  endfunction
+
+" Automatically open, but do not go to (if there are errors) the quickfix /
+" location list window, or close it when is has become empty.
+"
+" Note: Must allow nesting of autocmds to enable any customizations for quickfix
+" buffers.
+" Note: Normally, :cwindow jumps to the quickfix window if the command opens it
+" (but not if it's already open). However, as part of the autocmd, this doesn't
+" seem to happen.
+autocmd QuickFixCmdPost [^l]* nested cwindow
+autocmd QuickFixCmdPost    l* nested lwindow
+
+"autocmd FileType tex exe "set makeprg=rubber-info\\ _" . expand("%:t:r") . ".log"
+
+set relativenumber
+set nobackup
+set noswapfile
+:autocmd FileType nerdtree set norelativenumber
+"noremap <Up> <NOP>
+"noremap <Down> <NOP>
+"noremap <Left> <NOP>
+"noremap <Right> <NOP>
+execute pathogen#infect()
+
+autocmd FileType python map <buffer> <F4> :call Flake8()<CR>
+
+execute pathogen#infect()
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 0
+let g:syntastic_check_on_open = 0
+let g:syntastic_check_on_wq = 0
+let g:syntastic_check_on_wq = 0

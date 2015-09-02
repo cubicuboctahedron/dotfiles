@@ -170,3 +170,7 @@
 [url "git://gist.github.com/"]
 
 	insteadOf = "gist:"
+
+[user]
+	name = Ilya Grishkov
+	email = me@ilyagrishkov.com
